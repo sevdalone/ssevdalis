@@ -1,0 +1,96 @@
+﻿@model OrderezeTaskClient.Models.ImageListViewModel
+@{
+    ViewBag.Title = "Images";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Upload image</h2>
+
+        @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true);
+
+            @Html.HiddenFor(model => model.ImageToBeUploaded.Id)
+            @Html.HiddenFor(model => model.ImageToBeUploaded.ImagePath)
+
+            <div class="col-md-12">
+                @Html.LabelFor(model => model.ImageToBeUploaded.Name)
+                <div class="col-md-12">
+                    @Html.TextBoxFor(model => model.ImageToBeUploaded.Name, new { @class = "form-control" })
+                </div>
+                <div class="col-md-12 text-danger">
+                    @Html.ValidationMessageFor(model => model.ImageToBeUploaded.Name)
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                @Html.LabelFor(model => model.ImageToBeUploaded.Description)
+                <div class="col-md-12">
+                    @Html.TextBoxFor(model => model.ImageToBeUploaded.Description, new { @class = "form-control" })
+                </div>
+                <div class="col-md-12 text-danger">
+                    @Html.ValidationMessageFor(model => model.ImageToBeUploaded.Description)
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                @Html.LabelFor(m => m.ImageToBeUploaded.ImageUpload)
+                <div class="col-md-12">
+                    @Html.TextBoxFor(m => m.ImageToBeUploaded.ImageUpload, new { @class = "form-control", type = "file" })
+                </div>
+                <div class="col-md-12 text-danger">
+                    @Html.ValidationMessageFor(model => model.ImageToBeUploaded.ImageUpload)
+                </div>
+            </div>
+
+            <input class="btn btn-default" type="submit" value="Upload" />
+        }
+
+        <table>
+            <thead class="table table-bordered table-responsive table-striped table-condensed table-hover">
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.ImageToBeUploaded.Id)</th>
+                    <th>@Html.DisplayNameFor(model => model.ImageToBeUploaded.Name)</th>
+                    <th>@Html.DisplayNameFor(model => model.ImageToBeUploaded.Description)</th>
+                    <th>@Html.DisplayName("Image")</th>
+                    <th></th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @foreach (var image in Model.UploadedImages)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(model => image.Id)</td>
+                        <td>@Html.DisplayFor(model => image.Name)</td>
+                        <td>@Html.DisplayFor(model => image.Description)</td>
+                        <td>
+                            <img src="@image.ImagePath" alt="" width="150" height="150">
+                        </td>
+                        <td>
+                            <a id="@image.Id" onclick="deleteImage('@image.Id')">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        function deleteImage(imageId) {
+            var url = "/Home/DeleteImage";
+            $.post(url, {
+                id: imageId
+            }, function (data) {
+                window.location.href = "/Home/Index";
+                alert(data);
+            })
+        };
+    </script>
+}
+

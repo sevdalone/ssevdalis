@@ -1,0 +1,86 @@
+﻿@model OrderezeClient.Models.ImageListViewModel
+@{
+    ViewBag.Title = "Images";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>Upload image</h2>
+
+        @using (Html.BeginForm("UploadImage", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true);
+
+            @Html.HiddenFor(model => model.ImageToBeUploaded.Id)
+            @Html.HiddenFor(model => model.ImageToBeUploaded.ImagePath)
+            
+            <div class="col-md-12">
+                <input type="file" name="image" />
+            </div>
+
+            <div class="col-md-12">
+                @Html.LabelFor(model => model.ImageToBeUploaded.Name)
+                <div class="col-md-12">
+                    @Html.TextBoxFor(model => model.ImageToBeUploaded.Name, new { @class= "form-control" })
+                </div>
+            </div>
+
+            <div class="col-md-12">
+                @Html.LabelFor(model => model.ImageToBeUploaded.Description)
+                <div class="col-md-12">
+                    @Html.TextBoxFor(model => model.ImageToBeUploaded.Description, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <div class="col-md-12">>
+                @Html.LabelFor(m => m.ImageToBeUploaded.ImageUpload)
+                <div class="col-md-12">
+                    @Html.EditorFor(m => m.ImageToBeUploaded.ImageUpload, new { @class = "form-control" })
+                </div>
+            </div>
+            <input class="btn btn-default" type="submit" value="Upload" />
+        }
+
+        <table>
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.ImageToBeUploaded.Id)</th>
+                    <th>@Html.DisplayNameFor(model => model.ImageToBeUploaded.Name)</th>
+                    <th>@Html.DisplayNameFor(model => model.ImageToBeUploaded.Description)</th>
+                    <th>@Html.DisplayNameFor(model => model.ImageToBeUploaded.ImagePath)</th>
+                    <th>@Html.DisplayNameFor(model => model.ImageToBeUploaded.ImagePath)</th>
+                </tr>
+                
+            </thead>
+            <tbody>
+                @foreach (var image in Model.UploadedImages)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(model => model.ImageToBeUploaded.Id)</td>
+                        <td>@Html.DisplayFor(model => model.ImageToBeUploaded.Name)</td>
+                        <td>@Html.DisplayFor(model => model.ImageToBeUploaded.Description)</td>
+                        <td>@Html.DisplayFor(model => model.ImageToBeUploaded.ImagePath)</td>
+                        <td>@Html.DisplayFor(model => model.ImageToBeUploaded.ImagePath)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        function deleteImage(image) {
+            var url = "/Home/DeleteImage";
+            $.post(url, {
+                Name: image
+            }, function (data) {
+                window.location.href = "/Home/UploadImage";
+                alert(data);
+            })
+        };
+    </script>
+}
+
